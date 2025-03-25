@@ -16,7 +16,7 @@ bash <(curl -L -s https://raw.githubusercontent.com/ActiveIce/vlmcsd/master/depl
 ### 激活 Windows 11 Enterprise
 ```
 slmgr /ipk NPPR9-FWDCX-D2C8J-H872K-2YT43
-slmgr /skms kms.loli.beer
+slmgr /skms <IP>
 slmgr /ato
 ```
 
