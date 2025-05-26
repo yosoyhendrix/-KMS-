@@ -6,7 +6,7 @@ agent_user=ogp_agent
 start() {
     # start daemon
     echo -n "Starting OGP Agent WINE VNC: "
-    su -c "vncserver :1 -geometry 800x600 -depth 24" $agent_user
+    su -c "vncserver :1 -geometry 1024x768 -depth 24" $agent_user
     RETVAL=$?
     return $RETVAL
 }
