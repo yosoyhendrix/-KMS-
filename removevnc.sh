@@ -13,3 +13,4 @@ echo "Dependencias no usadas eliminadas."
 # Limpia el caché de paquetes descargados
 sudo apt autoclean -y
 echo "Caché de paquetes limpiado."
+sudo apt install tightvncserver -y
