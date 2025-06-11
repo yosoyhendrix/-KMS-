@@ -1,0 +1,17 @@
+# ogp_vnc systemd Service Script
+# By Open Game Panel
+# OGP <own3mall@gmail.com>
+[Unit]
+Description=OGP VNC Daemon
+After=network.target
+
+[Service]
+Type=oneshot
+
+ExecStart=/usr/bin/nohup /bin/sh -c "/usr/bin/ogp_vnc.sh start" &>/dev/null &
+ExecStop=/bin/sh -c "/usr/bin/ogp_vnc.sh stop"
+
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
