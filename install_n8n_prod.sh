@@ -9,7 +9,7 @@ N8N_TIMEZONE="America/Santo_Domingo" # Ajusta tu zona horaria (ej. "America/New_
 N8N_ENCRYPTION_KEY=$(openssl rand -base64 32) # ¡IMPORTANTE! Genera una clave segura. ¡Guárdala!
 
 # Credenciales de acceso básicas para n8n UI (¡CAMBIA ESTAS VALORES O FALLARÁ LA INSTALACIÓN!)
-N8N_BASIC_AUTH_USER="admin_produccion"      # <--- ¡CAMBIA ESTO!
+N8N_BASIC_AUTH_USER="n8nuser"      # <--- ¡CAMBIA ESTO!
 N8N_BASIC_AUTH_PASSWORD="ContrasenaMuySeguraParaN8n" # <--- ¡CAMBIA ESTO!
 
 # --- Configuración de Dominio para Nginx y HTTPS (¡AJUSTA ESTOS VALORES O FALLARÁ LA INSTALACIÓN!) ---
@@ -66,32 +66,42 @@ sudo mkdir -p "$N8N_DIR" || { echo -e "${RED}Error: Falló la creación del dire
 sudo chown -R "$N8N_USER":"$N8N_USER" "$N8N_DIR" || { echo -e "${RED}Error: Falló la asignación de permisos a '$N8N_DIR'.${NC}"; exit 1; }
 sudo chown -R "$N8N_USER":"$N8N_USER" "/home/$N8N_USER" || { echo -e "${RED}Error: Falló la asignación de permisos al home de '$N8N_USER'.${NC}"; exit 1; }
 
-# --- Paso 4: Instalar n8n y PM2 globalmente para el usuario n8nuser ---
-echo -e "${GREEN}4. Instalando n8n y PM2 globalmente para el usuario '$N8N_USER'...${NC}"
+# --- Paso 4: Instalar NVM, Node.js, n8n y PM2 globalmente para el usuario n8nuser ---
+echo -e "${GREEN}4. Instalando NVM, Node.js LTS, n8n y PM2 globalmente para el usuario '$N8N_USER'...${NC}"
 
-# Primero, instala NVM para el n8nuser
-echo -e "${BLUE}Instalando NVM para '$N8N_USER'...${NC}"
-sudo su - "$N8N_USER" -c 'curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash' || { echo -e "${RED}Error: Falló la instalación de NVM para '$N8N_USER'.${NC}"; exit 1; }
+# Script para ejecutar bajo n8nuser para instalar NVM, Node.js, n8n y PM2
+INSTALL_NVM_NODE_NPM_SCRIPT=$(cat <<EOF
+export HOME="/home/$N8N_USER"
+export NVM_DIR="$HOME/.nvm"
+# Descargar e instalar NVM
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash || exit 1
+# Cargar NVM
+[ -s "$NVM_DIR/nvm.sh" ] && \\. "$NVM_DIR/nvm.sh" || exit 1
+[ -s "$NVM_DIR/bash_completion" ] && \\. "$NVM_DIR/bash_completion" || exit 1
+# Instalar Node.js LTS
+nvm install --lts || exit 1
+nvm use --lts || exit 1
+nvm alias default 'lts/*' || exit 1
+# Instalar n8n y PM2
+npm install -g n8n@"$N8N_VERSION" || exit 1
+npm install -g pm2 || exit 1
+echo "NVM, Node.js, n8n y PM2 instalados para $N8N_USER."
+EOF
+)
 
-# Carga NVM y luego instala Node.js LTS para n8nuser
-echo -e "${BLUE}Instalando Node.js LTS para '$N8N_USER'...${NC}"
-sudo su - "$N8N_USER" -c 'export NVM_DIR="/home/'"$N8N_USER"'/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm install --lts && nvm use --lts && nvm alias default "lts/*"' || { echo -e "${RED}Error: Falló la instalación de Node.js LTS para '$N8N_USER'.${NC}"; exit 1; }
-
-echo -e "${BLUE}Instalando n8n...${NC}"
-sudo su - "$N8N_USER" -c 'export NVM_DIR="/home/'"$N8N_USER"'/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use --lts && npm install -g n8n@'"$N8N_VERSION"'' || { echo -e "${RED}Error: Falló la instalación de n8n globalmente.${NC}"; exit 1; }
-
-echo -e "${BLUE}Instalando PM2...${NC}"
-sudo su - "$N8N_USER" -c 'export NVM_DIR="/home/'"$N8N_USER"'/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use --lts && npm install -g pm2' || { echo -e "${RED}Error: Falló la instalación de PM2 globalmente.${NC}"; exit 1; }
-
+sudo su - "$N8N_USER" -c "$INSTALL_NVM_NODE_NPM_SCRIPT" || { echo -e "${RED}Error: Falló la instalación de NVM/Node.js/n8n/PM2 para '$N8N_USER'.${NC}"; exit 1; }
 
 # --- Paso 5: Configurar n8n como un servicio PM2 ---
 echo -e "${GREEN}5. Configurando n8n como un proceso PM2...${NC}"
 
 # Obtener la ruta completa al binario de pm2 dentro del entorno de nvm del usuario
-PM2_BIN_PATH=$(sudo su - "$N8N_USER" -c 'export NVM_DIR="/home/'"$N8N_USER"'/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use --lts > /dev/null 2>&1 && npm bin -g 2>/dev/null')
+# Aseguramos que NVM se carga para obtener la ruta correcta
+PM2_BIN_PATH=$(sudo su - "$N8N_USER" -c 'export HOME="/home/'"$N8N_USER"'" && export NVM_DIR="$HOME/.nvm" && [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" && nvm use --lts > /dev/null 2>&1 && npm bin -g 2>/dev/null')/pm2
 
 if [ -z "$PM2_BIN_PATH" ] || [ ! -x "$PM2_BIN_PATH" ]; then
-    echo -e "${RED}Error: No se pudo determinar o verificar la ruta ejecutable de PM2 para '$N8N_USER'. Revisa la instalación de NVM/Node.js/PM2 para este usuario.${NC}"
+    echo -e "${RED}Error: No se pudo determinar o verificar la ruta ejecutable de PM2 para '$N8N_USER'.${NC}"
+    echo -e "${RED}Asegúrate de que NVM, Node.js y PM2 se instalaron correctamente para este usuario.${NC}"
+    echo -e "${RED}Ruta PM2 intentada: '$PM2_BIN_PATH'${NC}"
     exit 1
 fi
 
@@ -100,7 +110,8 @@ N8N_START_SCRIPT="$N8N_DIR/start_n8n.sh"
 sudo bash -c "cat << EOF > $N8N_START_SCRIPT
 #!/bin/bash
 # Cargar NVM para asegurar que n8n se ejecuta con la versión correcta de Node.js
-export NVM_DIR=\"/home/$N8N_USER/.nvm\"
+export HOME=\"/home/$N8N_USER\"
+export NVM_DIR=\"\$HOME/.nvm\"
 [ -s \"\$NVM_DIR/nvm.sh\" ] && \\. \"\$NVM_DIR/nvm.sh\"
 [ -s \"\$NVM_DIR/bash_completion\" ] && \\. \"\$NVM_DIR/bash_completion\"
 nvm use --lts > /dev/null
