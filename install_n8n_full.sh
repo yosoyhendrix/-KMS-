@@ -51,15 +51,23 @@ npm -v
 
 # --- Paso 3: Crear usuario y directorio para n8n ---
 echo -e "${GREEN}Creando usuario '$N8N_USER' y directorio '$N8N_DIR' para n8n...${NC}"
-if id "$N8N_USER" &>/dev/null; then
-    echo "El usuario '$N8N_USER' ya existe."
+if id -u "$N8N_USER" >/dev/null 2>&1; then
+    echo "El usuario '$N8N_USER' ya existe. Omitiendo la creación del usuario."
 else
-    sudo adduser --system --no-create-home --group "$N8N_USER"
-    echo "Usuario '$N8N_USER' creado."
+    # Crear usuario de sistema con un home directory y shell válido
+    # Usamos bash como shell para que pm2 startup funcione correctamente.
+    sudo useradd -r -s /bin/bash -m -d "/home/$N8N_USER" "$N8N_USER"
+    if [ $? -eq 0 ]; then
+        echo "Usuario '$N8N_USER' creado con éxito y directorio home."
+    else
+        echo -e "${RED}Error: Falló la creación del usuario '$N8N_USER'.${NC}"
+        exit 1
+    fi
 fi
 
 sudo mkdir -p "$N8N_DIR"
 sudo chown -R "$N8N_USER":"$N8N_USER" "$N8N_DIR"
+sudo chown -R "$N8N_USER":"$N8N_USER" "/home/$N8N_USER" # Asegurar permisos del home dir
 
 # --- Paso 4: Instalar n8n globalmente ---
 echo -e "${GREEN}Instalando n8n globalmente...${NC}"
