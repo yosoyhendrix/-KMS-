@@ -67,7 +67,8 @@ fi
 
 sudo mkdir -p "$N8N_DIR"
 sudo chown -R "$N8N_USER":"$N8N_USER" "$N8N_DIR"
-sudo chown -R "$N8N_USER":"$N8N_USER" "/home/$N8N_USER" # Asegurar permisos del home dir
+sudo chown -R "$N8N_USER":"$N8N_USER" "/home/$N8N_USER" 
+# Asegurar permisos del home dir
 
 # --- Paso 4: Instalar n8n globalmente ---
 echo -e "${GREEN}Instalando n8n globalmente...${NC}"
