@@ -3,7 +3,7 @@
 # --- Configuración ---
 N8N_DATA_DIR="/var/lib/n8n"
 N8N_PORT=5678
-YOUR_DOMAIN_OR_IP="your_domain_or_IP" # ¡IMPORTANTE! Reemplaza esto con tu dominio o IP real
+YOUR_DOMAIN_OR_IP="ia.yosoyhendrix.com" # ¡IMPORTANTE! Reemplaza esto con tu dominio o IP real
 
 # --- Colores para la salida ---
 GREEN='\033[0;32m'
@@ -67,8 +67,16 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-# 4. Crear el archivo docker-compose.yml
-echo -e "${GREEN}4. Creando el archivo docker-compose.yml...${NC}"
+# **CORRECCIÓN:** Crear el directorio /opt/n8n antes de intentar crear el archivo docker-compose.yml
+echo -e "${GREEN}4. Creando el directorio /opt/n8n...${NC}"
+sudo mkdir -p /opt/n8n
+if [ $? -ne 0 ]; then
+    echo -e "${RED}Error al crear el directorio /opt/n8n. Saliendo.${NC}"
+    exit 1
+fi
+
+# 5. Crear el archivo docker-compose.yml
+echo -e "${GREEN}5. Creando el archivo docker-compose.yml...${NC}"
 cat <<EOF | sudo tee /opt/n8n/docker-compose.yml
 version: '3.8'
 
@@ -104,17 +112,16 @@ fi
 
 echo -e "${GREEN}Archivo docker-compose.yml creado en /opt/n8n/docker-compose.yml${NC}"
 
-# 5. Iniciar n8n con Docker Compose
-echo -e "${GREEN}5. Iniciando n8n con Docker Compose...${NC}"
-sudo mkdir -p /opt/n8n
+# 6. Iniciar n8n con Docker Compose
+echo -e "${GREEN}6. Iniciando n8n con Docker Compose...${NC}"
 sudo docker compose -f /opt/n8n/docker-compose.yml up -d
 if [ $? -ne 0 ]; then
     echo -e "${RED}Error al iniciar n8n con Docker Compose. Saliendo.${NC}"
     exit 1
 fi
 
-# 6. Configurar Firewall (UFW)
-echo -e "${GREEN}6. Configurando el firewall (UFW)...${NC}"
+# 7. Configurar Firewall (UFW)
+echo -e "${GREEN}7. Configurando el firewall (UFW)...${NC}"
 sudo apt install -y ufw
 sudo ufw allow OpenSSH
 sudo ufw allow "$N8N_PORT"/tcp comment "Allow n8n traffic"
@@ -125,7 +132,7 @@ if [ $? -ne 0 ]; then
 fi
 echo -e "${GREEN}Firewall configurado. Puerto ${N8N_PORT} abierto.${NC}"
 
-echo -e "${GREEN}7. Verificando el estado de n8n...${NC}"
+echo -e "${GREEN}8. Verificando el estado de n8n...${NC}"
 docker ps -f "name=n8n"
 if [ $? -ne 0 ]; then
     echo -e "${RED}Parece que el contenedor de n8n no se está ejecutando. Revisa los logs.${NC}"
