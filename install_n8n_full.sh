@@ -80,21 +80,37 @@ npm install -g pm2 || { echo -e "${RED}Error: Falló la instalación de PM2.${NC
 # --- Paso 6: Configurar n8n como un servicio PM2 ---
 echo -e "${GREEN}Configurando n8n como un proceso PM2...${NC}"
 
+# Ruta al ejecutable de pm2 dentro del entorno de nvm del usuario
+# Obtenemos la ruta completa al binario de pm2 una vez instalado
+PM2_BIN_PATH=$(sudo su - "$N8N_USER" -c "nvm use --lts > /dev/null && npm bin -g")/pm2
+
+# Validar si se encontró la ruta de pm2
+if [ -z "$PM2_BIN_PATH" ]; then
+    echo -e "${RED}Error: No se pudo determinar la ruta de PM2. Asegúrate de que NVM y PM2 se instalaron correctamente para el usuario '$N8N_USER'.${NC}"
+    exit 1
+fi
+
 # Crear un script de inicio para n8n
 N8N_START_SCRIPT="$N8N_DIR/start_n8n.sh"
 sudo bash -c "cat << EOF > $N8N_START_SCRIPT
 #!/bin/bash
+# Cargar NVM para asegurar que n8n se ejecuta con la versión correcta de Node.js
+export NVM_DIR=\"/home/$N8N_USER/.nvm\"
+[ -s \"\$NVM_DIR/nvm.sh\" ] && \\. \"\$NVM_DIR/nvm.sh\"
+[ -s \"\$NVM_DIR/bash_completion\" ] && \\. \"\$NVM_DIR/bash_completion\"
+nvm use --lts > /dev/null
+
 export N8N_HOST=localhost
 export N8N_PORT=$N8N_PORT
-export N8N_PROTOCOL=http # Nginx manejará HTTPS externamente, n8n se comunica internamente via HTTP
-export WEBHOOK_URL=https://$YOUR_DOMAIN/ # ¡MUY IMPORTANTE! URL pública de n8n
+export N8N_PROTOCOL=http
+export WEBHOOK_URL=https://$YOUR_DOMAIN/
 export GENERIC_TIMEZONE=$N8N_TIMEZONE
 export TZ=$N8N_TIMEZONE
 export N8N_ENCRYPTION_KEY='$N8N_ENCRYPTION_KEY'
 export N8N_BASIC_AUTH_ACTIVE=true
 export N8N_BASIC_AUTH_USER='$N8N_BASIC_AUTH_USER'
 export N8N_BASIC_AUTH_PASSWORD='$N8N_BASIC_AUTH_PASSWORD'
-export N8N_DATA_FOLDER=$N8N_DIR/.n8n # Persistir datos en un subdirectorio
+export N8N_DATA_FOLDER=$N8N_DIR/.n8n
 exec n8n start
 EOF"
 
@@ -103,15 +119,20 @@ sudo chown "$N8N_USER":"$N8N_USER" "$N8N_START_SCRIPT"
 
 # Iniciar n8n con PM2 bajo el usuario n8nuser
 echo -e "${GREEN}Iniciando n8n con PM2...${NC}"
-sudo su - "$N8N_USER" -c "pm2 start '$N8N_START_SCRIPT' --name n8n --interpreter bash" || { echo -e "${RED}Error: Falló el inicio de n8n con PM2.${NC}"; exit 1; }
+# Usamos la ruta completa a pm2
+sudo su - "$N8N_USER" -c "$PM2_BIN_PATH start '$N8N_START_SCRIPT' --name n8n --interpreter bash" || { echo -e "${RED}Error: Falló el inicio de n8n con PM2.${NC}"; exit 1; }
 
 # Configurar PM2 para iniciar n8n al reiniciar el sistema
 echo -e "${GREEN}Configurando PM2 para el inicio automático al reiniciar el sistema...${NC}"
-sudo su - "$N8N_USER" -c "pm2 startup systemd"
+# Genera el script de inicio de PM2 para el usuario n8nuser
+# Usamos la ruta completa a pm2
+sudo su - "$N8N_USER" -c "$PM2_BIN_PATH startup systemd"
 
 # Guardar la lista de procesos PM2 para que persistan después de un reinicio
 echo -e "${GREEN}Guardando la configuración de PM2...${NC}"
-sudo su - "$N8N_USER" -c "pm2 save"
+# Usamos la ruta completa a pm2
+sudo su - "$N8N_USER" -c "$PM2_BIN_PATH save"
+
 
 # --- Paso 7: Instalar y Configurar Nginx ---
 echo -e "${GREEN}Instalando Nginx...${NC}"
