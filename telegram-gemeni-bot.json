@@ -2,373 +2,115 @@
   "nodes": [
     {
       "parameters": {
-        "connections": {
-          "webhookIds": []
-        },
-        "path": "webhook/telegram",
         "httpMethod": "POST",
-        "responseMode": "responseNode",
+        "path": "webhook",
         "options": {}
       },
-      "name": "Webhook Telegram",
+      "name": "Telegram Webhook",
       "type": "n8n-nodes-base.webhook",
       "typeVersion": 1,
-      "position": [400, 250],
-      "id": "telegram_webhook"
+      "workflowId": null,
+      "uid": "1",
+      "position": [
+        240,
+        300
+      ]
     },
     {
       "parameters": {
         "conditions": [
           {
-            "id": "always",
-            "type": "always",
-            "value": true,
-            "property": ""
+            "value1": "={{ $json.message.text !== undefined }}",
+            "value2": "=true"
           }
-        ],
-        "values": {
-          "field": "message",
-          "value": "=if($json.message.text, 'text', if($json.message.photo, 'photo', if($json.message.voice, 'audio', if($json.message.video, 'video', 'unknown'))))"
-        }
+        ]
       },
-      "name": "Detect Type",
-      "type": "n8n-nodes-base.switch",
+      "name": "If Text Message",
+      "type": "n8n-nodes-base.if",
       "typeVersion": 1,
-      "position": [600, 250],
-      "id": "detect_type"
+      "workflowId": null,
+      "uid": "2",
+      "position": [
+        450,
+        300
+      ]
     },
     {
       "parameters": {
-        "url": "https://api.telegram.org/botTU_API_KEY_TELEGRAM/sendMessage",
-        "jsonParameters": true,
-        "options": {},
-        "body": {
-          "chat_id": "={{$json.message.chat.id}}",
-          "text": "Se ha recibido un mensaje de texto. Procesando con Gemini...",
-          "reply_to_message_id": "={{$json.message.message_id}}"
-        },
-        "sendOnlySet": true
-      },
-      "name": "Send Reply (Text)",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [800, 150],
-      "id": "send_reply_text"
-    },
-    {
-      "parameters": {
-        "url": "https://api.telegram.org/botTU_API_KEY_TELEGRAM/getFile?file_id={{$json.message.photo[0].file_id}}",
-        "options": {}
-      },
-      "name": "Get Photo File Path",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [800, 350],
-      "id": "get_photo_file_path"
-    },
-    {
-      "parameters": {
-        "url": "https://api.telegram.org/file/botTU_API_KEY_TELEGRAM/{{$json.file_path}}",
+        "url": "YOUR_GEMINI_API_ENDPOINT",
         "options": {
-          "responseMode": "binary"
-        }
-      },
-      "name": "Download Photo",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [1000, 350],
-      "id": "download_photo"
-    },
-    {
-      "parameters": {
-        "url": "https://api.telegram.org/botTU_API_KEY_TELEGRAM/getFile?file_id={{$json.message.voice.file_id}}",
-        "options": {}
-      },
-      "name": "Get Audio File Path",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [800, 550],
-      "id": "get_audio_file_path"
-    },
-    {
-      "parameters": {
-        "url": "https://api.telegram.org/file/botTU_API_KEY_TELEGRAM/{{$json.file_path}}",
-        "options": {
-          "responseMode": "binary"
-        }
-      },
-      "name": "Download Audio",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [1000, 550],
-      "id": "download_audio"
-    },
-    {
-      "parameters": {
-        "url": "https://api.telegram.org/botTU_API_KEY_TELEGRAM/getFile?file_id={{$json.message.video.file_id}}",
-        "options": {}
-      },
-      "name": "Get Video File Path",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [800, 750],
-      "id": "get_video_file_path"
-    },
-    {
-      "parameters": {
-        "url": "https://api.telegram.org/file/botTU_API_KEY_TELEGRAM/{{$json.file_path}}",
-        "options": {
-          "responseMode": "binary"
-        }
-      },
-      "name": "Download Video",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [1000, 750],
-      "id": "download_video"
-    },
-    {
-      "parameters": {
-        "url": "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=TU_API_KEY_GEMINI",
-        "method": "POST",
-        "jsonParameters": true,
-        "options": {},
-        "body": {
-          "contents": [
+          "authentication": "headers",
+          "headers": [
             {
-              "parts": [
-                {
-                  "text": "={{$json.message.text}}"
-                }
-              ]
+              "name": "Content-Type",
+              "value": "application/json"
+            },
+            {
+              "name": "Authorization",
+              "value": "Bearer YOUR_GEMINI_API_KEY"
             }
           ]
         },
-        "sendOnlySet": true
+        "jsonBody": "={\n  \"contents\": [\n    {\n      \"parts\": [\n        {\n          \"text\": \"{{ $json.message.text }}\"\n        }\n      ]\n    }\n  ]\n}"
       },
-      "name": "Google Gemini (Text)",
+      "name": "Call Gemini (Text)",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 1,
-      "position": [1200, 150],
-      "id": "google_gemini_text"
+      "workflowId": null,
+      "uid": "3",
+      "position": [
+        680,
+        200
+      ]
     },
     {
       "parameters": {
-        "url": "https://api.telegram.org/botTU_API_KEY_TELEGRAM/sendMessage",
-        "jsonParameters": true,
-        "options": {},
-        "body": {
-          "chat_id": "={{$json.message.chat.id}}",
-          "text": "Respuesta de Gemini: {{$json.candidates[0].content.parts[0].text}}",
-          "reply_to_message_id": "={{$json.message.message_id}}"
-        },
-        "sendOnlySet": true
+        "authentication": "botToken",
+        "chatId": "={{ $json.message.chat.id }}",
+        "text": "={{ $json.data.candidates[0].content.parts[0].text }}",
+        "botToken": "YOUR_TELEGRAM_BOT_TOKEN"
       },
-      "name": "Send Gemini Response",
-      "type": "n8n-nodes-base.httpRequest",
+      "name": "Send Telegram Message",
+      "type": "n8n-nodes-base.telegram",
       "typeVersion": 1,
-      "position": [1400, 150],
-      "id": "send_gemini_response"
-    },
-    {
-      "parameters": {
-        "url": "https://api.telegram.org/botTU_API_KEY_TELEGRAM/sendMessage",
-        "jsonParameters": true,
-        "options": {},
-        "body": {
-          "chat_id": "={{$json.message.chat.id}}",
-          "text": "He recibido una foto. Actualmente, Gemini no puede procesar directamente imágenes binarias en esta configuración. ¿Hay algo más en lo que pueda ayudarte?",
-          "reply_to_message_id": "={{$json.message.message_id}}"
-        },
-        "sendOnlySet": true
-      },
-      "name": "Inform Photo Limit",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [1400, 350],
-      "id": "inform_photo_limit"
-    },
-    {
-      "parameters": {
-        "url": "https://api.telegram.org/botTU_API_KEY_TELEGRAM/sendMessage",
-        "jsonParameters": true,
-        "options": {},
-        "body": {
-          "chat_id": "={{$json.message.chat.id}}",
-          "text": "He recibido un audio. Actualmente, Gemini no puede procesar directamente audios en esta configuración. ¿Hay algo más en lo que pueda ayudarte?",
-          "reply_to_message_id": "={{$json.message.message_id}}"
-        },
-        "sendOnlySet": true
-      },
-      "name": "Inform Audio Limit",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [1400, 550],
-      "id": "inform_audio_limit"
-    },
-    {
-      "parameters": {
-        "url": "https://api.telegram.org/botTU_API_KEY_TELEGRAM/sendMessage",
-        "jsonParameters": true,
-        "options": {},
-        "body": {
-          "chat_id": "={{$json.message.chat.id}}",
-          "text": "He recibido un video. Actualmente, Gemini no puede procesar directamente videos en esta configuración. ¿Hay algo más en lo que pueda ayudarte?",
-          "reply_to_message_id": "={{$json.message.message_id}}"
-        },
-        "sendOnlySet": true
-      },
-      "name": "Inform Video Limit",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [1400, 750],
-      "id": "inform_video_limit"
-    },
-    {
-      "parameters": {
-        "url": "https://api.telegram.org/botTU_API_KEY_TELEGRAM/sendMessage",
-        "jsonParameters": true,
-        "options": {},
-        "body": {
-          "chat_id": "={{$json.message.chat.id}}",
-          "text": "No he podido identificar el tipo de mensaje. Por favor, envía texto, una foto, un audio o un video.",
-          "reply_to_message_id": "={{$json.message.message_id}}"
-        },
-        "sendOnlySet": true
-      },
-      "name": "Unknown Message Type",
-      "type": "n8n-nodes-base.httpRequest",
-      "typeVersion": 1,
-      "position": [800, 950],
-      "id": "unknown_message_type"
+      "workflowId": null,
+      "uid": "4",
+      "position": [
+        900,
+        200
+      ]
     }
   ],
   "connections": {
-    "Webhook Telegram": {
+    "Telegram Webhook": {
       "main": [
         [
           {
-            "node": "Detect Type",
+            "node": "If Text Message",
             "type": "main"
           }
         ]
       ]
     },
-    "Detect Type": {
+    "If Text Message": {
       "main": [
         [
           {
-            "index": 0,
-            "node": "Send Reply (Text)",
-            "type": "main"
-          },
-          {
-            "index": 1,
-            "node": "Get Photo File Path",
-            "type": "main"
-          },
-          {
-            "index": 2,
-            "node": "Get Audio File Path",
-            "type": "main"
-          },
-          {
-            "index": 3,
-            "node": "Get Video File Path",
-            "type": "main"
-          },
-          {
-            "index": 4,
-            "node": "Unknown Message Type",
+            "node": "Call Gemini (Text)",
             "type": "main"
           }
         ]
       ]
     },
-    "Send Reply (Text)": {
+    "Call Gemini (Text)": {
       "main": [
         [
           {
-            "node": "Google Gemini (Text)",
-            "type": "main"
-          }
-        ]
-      ]
-    },
-    "Google Gemini (Text)": {
-      "main": [
-        [
-          {
-            "node": "Send Gemini Response",
-            "type": "main"
-          }
-        ]
-      ]
-    },
-    "Get Photo File Path": {
-      "main": [
-        [
-          {
-            "node": "Download Photo",
-            "type": "main"
-          }
-        ]
-      ]
-    },
-    "Download Photo": {
-      "main": [
-        [
-          {
-            "node": "Inform Photo Limit",
-            "type": "main"
-          }
-        ]
-      ]
-    },
-    "Get Audio File Path": {
-      "main": [
-        [
-          {
-            "node": "Download Audio",
-            "type": "main"
-          }
-        ]
-      ]
-    },
-    "Download Audio": {
-      "main": [
-        [
-          {
-            "node": "Inform Audio Limit",
-            "type": "main"
-          }
-        ]
-      ]
-    },
-    "Get Video File Path": {
-      "main": [
-        [
-          {
-            "node": "Download Video",
-            "type": "main"
-          }
-        ]
-      ]
-    },
-    "Download Video": {
-      "main": [
-        [
-          {
-            "node": "Inform Video Limit",
+            "node": "Send Telegram Message",
             "type": "main"
           }
         ]
       ]
     }
-  ],
-  "active": false,
-  "settings": {},
-  "id": "telegram_gemini_bot",
-  "name": "Telegram Gemini Bot",
-  "pinData": {}
+  }
 }
