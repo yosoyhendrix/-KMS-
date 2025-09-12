@@ -56,3 +56,6 @@ ip6tables -A INPUT -j ACCEPT
 
 echo "Configuración del firewall completada."
 echo "Para verificar las reglas, usa los comandos: iptables -L y ip6tables -L"
+# apt update && apt install iptables-persistent -y
+echo "Guardando las reglas de IPTables e IP6Tables..."
+netfilter-persistent save
