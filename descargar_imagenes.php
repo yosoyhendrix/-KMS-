@@ -1,7 +1,7 @@
 <?php
 
 // --- Configuración ---
-$base_url = "https://sirehv2-api.mem.gob.do/images/";
+$base_url = "https:///images/";
 $carpeta_destino = "imagen";
 $inicio = 1;
 $fin = 1000;
