@@ -9,7 +9,10 @@ $funciones_a_comprobar = [
     'popen', 
     'proc_open', 
     'pcntl_exec',
-    'bypass_shell'
+    'bypass_shell',
+    'escapeshellcmd',
+    'escapeshellarg',
+    
 ];
 
 echo "<h2>Verificación de Funciones de Ejecución de Comandos (Seguridad)</h2>";
