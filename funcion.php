@@ -8,7 +8,8 @@ $funciones_a_comprobar = [
     'passthru', 
     'popen', 
     'proc_open', 
-    'pcntl_exec'
+    'pcntl_exec',
+    'bypass_shell'
 ];
 
 echo "<h2>Verificación de Funciones de Ejecución de Comandos (Seguridad)</h2>";
