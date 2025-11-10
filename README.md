@@ -39,7 +39,7 @@ cscript ospp.vbs /act
 | Operating system edition	                                             | KMS Client Product Key        |
 | ---------------------------------------------------------------------- | ----------------------------- |
 | Windows 11 Pro<br>Windows 10 Pro                                       | W269N-WFGWX-YVC9B-4J6C9-T83GX |
-| Windows 11 Pro<br>Windows 10 IoT EnterpriseS                           | KBN8V-HFGQ4-MGXVD-347P6-PDQGT |
+| Windows 11 IoT EnterpriseS <br>Windows 10 IoT EnterpriseS              | KBN8V-HFGQ4-MGXVD-347P6-PDQGT |
 | Windows 11 Pro N<br>Windows 10 Pro N                                   | MH37W-N47XK-V7XM9-C7227-GCQG9 |
 | Windows 11 Pro for Workstations<br>Windows 10 Pro for Workstations     | NRG8B-VKK3Q-CXVCJ-9G2XF-6Q84J |
 | Windows 11 Pro for Workstations N<br>Windows 10 Pro for Workstations N | 9FNHH-K3HBT-3W4TD-6383H-6XYWF |
