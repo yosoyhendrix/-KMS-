@@ -1,4 +1,4 @@
-# vlmcsd (KMS 模拟器)
+# vlmcsd ( noindex )
 
 [![auto build engine](https://github.com/ActiveIce/vlmcsd/workflows/auto%20build%20engine/badge.svg)](https://github.com/ActiveIce/vlmcsd/actions)
 
