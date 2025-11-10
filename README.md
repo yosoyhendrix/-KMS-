@@ -20,11 +20,11 @@ slmgr /skms <IP>
 slmgr /ato
 ```
 
-### 激活 Office LTSC Professional Plus 2021
+### 激活 Office LTSC Professional Plus 2024
 ```
 cd "C:\Program Files\Microsoft Office\Office16"
-for /f %x in ('dir /b ..\root\Licenses16\ProPlus2021VL_KMS*.xrm-ms') do cscript ospp.vbs /inslic:"..\root\Licenses16\%x"
-cscript ospp.vbs /inpkey:FXYTK-NJJ8C-GB6DW-3DYQT-6F7TH
+for /f %x in ('dir /b ..\root\Licenses16\ProPlus2024VL_KMS*.xrm-ms') do cscript ospp.vbs /inslic:"..\root\Licenses16\%x"
+cscript ospp.vbs /inpkey:XJ2XN-FW8RK-P4HMP-DKDBV-GCVGB
 cscript ospp.vbs /sethst:<IP>
 cscript ospp.vbs /act
 ```
