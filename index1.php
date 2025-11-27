@@ -184,6 +184,7 @@
         "35914907": "iPhone 7", // Ya en lista
         "35538308": "iPhone 7",
         "35540308": "iPhone 7 Plus", // Ya en lista
+        "35535408": "iPhone 7 Plus", // Ya en lista
         "35674008": "iPhone 8", // Ya en lista
         "35298809": "iPhone 8 Plus", // Ya en lista
         "35673408": "iPhone X", // Ya en lista
@@ -194,6 +195,7 @@
         "35306310": "iPhone XS", // Ya en lista
         "35655709": "iPhone XS Max", // Ya en lista
         "35293211": "iPhone 11", // Ya en lista
+        "35397510": "iPhone 11", // Ya en lista
         "35308611": "iPhone 11 Pro", // Ya en lista
         "35306211": "iPhone 11 Pro Max", // Ya en lista
         "35304711": "iPhone SE (2020)", // Ya en lista
@@ -204,6 +206,8 @@
         "35282212": "iPhone 12",
         "35189712": "iPhone 12 Pro", // Ya en lista
         "35451712": "iPhone 12 Pro",
+        "35674091": "iPhone 12 Pro",
+        "35400984": "iPhone 12 Pro",
         "35294512": "iPhone 12 Pro Max", // Ya en lista
         "35451812": "iPhone 12 Pro Max",
         "35301812": "iPhone 12 Mini", // Ya en lista
@@ -230,6 +234,7 @@
         "35898122": "iPhone 14 Plus",
         "35060449": "iPhone 14 Pro", // Ya en lista
         "35252814": "iPhone 14 Pro",
+        "35879073": "iPhone 14 Pro",
         "35898222": "iPhone 14 Pro",
         "35061699": "iPhone 14 Pro Max", // Ya en lista
         "35898322": "iPhone 14 Pro Max",
@@ -244,9 +249,13 @@
         "35798899": "iPhone 15 Plus",
         "35400115": "iPhone 15 Plus",
         "35799099": "iPhone 15 Pro",
+        "35362930": "iPhone 15 Pro",
         "35400215": "iPhone 15 Pro",
         "35799199": "iPhone 15 Pro Max",
         "35400315": "iPhone 15 Pro Max",
+        "35108612": "iPhone 16",
+        "35629560": "iPhone 16 Pro",
+        "35355824": "iPhone 16 Pro Max",
     };
 
     // Búsqueda exacta
