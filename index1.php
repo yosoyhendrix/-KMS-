@@ -218,6 +218,7 @@
         "35027521": "iPhone 13", // Ya en lista
         "35467339": "iPhone 13",
         "35654314": "iPhone 13",
+        "35658686": "iPhone 13",
         "35027621": "iPhone 13 Mini",
         "35289114": "iPhone 13 Mini",
         "35467439": "iPhone 13 Pro", // Ya en lista
@@ -240,6 +241,7 @@
         "35061699": "iPhone 14 Pro Max", // Ya en lista
         "35898322": "iPhone 14 Pro Max",
         "35134435": "iPhone 14 Pro Max",
+        "35590999": "iPhone 14 Pro Max",
 
         // --- iPhone 15 Series / SE (2022) ---
         "35860017": "iPhone SE (2022)",
@@ -259,6 +261,7 @@
         "35629560": "iPhone 16 Pro",
         "35887662": "iPhone 16 Pro",
         "35407866": "iPhone 16 Pro",
+        "35762631": "iPhone 16 Pro",
         "35355824": "iPhone 16 Pro Max",
     };
 
