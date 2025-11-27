@@ -208,6 +208,7 @@
         "35451712": "iPhone 12 Pro",
         "35674091": "iPhone 12 Pro",
         "35400984": "iPhone 12 Pro",
+        "35510331": "iPhone 12 Pro",
         "35294512": "iPhone 12 Pro Max", // Ya en lista
         "35451812": "iPhone 12 Pro Max",
         "35301812": "iPhone 12 Mini", // Ya en lista
@@ -241,7 +242,8 @@
         "35134435": "iPhone 14 Pro Max",
 
         // --- iPhone 15 Series / SE (2022) ---
-        "35860017": "iPhone SE (2022)", 
+        "35860017": "iPhone SE (2022)",
+        "35306409": "iPhone SE",
         "35860117": "iPhone SE (2022)",
         "35798999": "iPhone 15",
         "35606615": "iPhone 15",
@@ -255,6 +257,8 @@
         "35400315": "iPhone 15 Pro Max",
         "35108612": "iPhone 16",
         "35629560": "iPhone 16 Pro",
+        "35887662": "iPhone 16 Pro",
+        "35407866": "iPhone 16 Pro",
         "35355824": "iPhone 16 Pro Max",
     };
 
