@@ -8,7 +8,7 @@
     <meta name="keywords" content="">
     <meta name="description" content="">
     <meta name="author" content="">
-    <title>Hackt1vator</title>
+    <title>Free Check</title>
     <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.1.3/assets/owl.carousel.min.css">
     <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700|Poppins:400,700&amp;display=swap" rel="stylesheet">
@@ -91,7 +91,7 @@
         <header class="header_section">
             <div class="container-fluid">
                 <nav class="navbar navbar-expand-lg custom_nav-container">
-                    <a class="navbar-brand" href="https://hackt1vator.com/default.php">
+                    <a class="navbar-brand" href="https://yosoyhendrix.com/imei">
                         <img src="images/logo.png" alt="">
                     </a>
                     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -147,7 +147,7 @@
 
     <section class="container-fluid footer_section ">
         <div class="container">
-            <p>developed by <a href="https://twitter.com/hackt1vator">@hackt1vator</a></p>
+            <p>developed by <a href="https://instagram.com/yosoyhendrix">@yosoyhendrix</a></p>
         </div>
     </section>
 
@@ -164,37 +164,101 @@
         // --- BASE DE DATOS DE TAC (Primeros 8 dígitos del IMEI) ---
         // Esto ayuda a identificar el modelo aunque el servidor falle.
         function getModelFromTAC(imei) {
-            if (!imei || imei.length < 8) return "Unknown (Check IMEI)";
-            
-            var tac = imei.substring(0, 8);
-            
-            // Lista simplificada de TACs comunes de iPhone
-            // Puedes añadir más TACs aquí si los encuentras
-            var tacDb = {
-                "35728509": "iPhone 6s", "35325807": "iPhone 6s",
-                "35914907": "iPhone 7", "35540308": "iPhone 7 Plus",
-                "35674008": "iPhone 8", "35298809": "iPhone 8 Plus",
-                "35673408": "iPhone X", "35487909": "iPhone X",
-                "35740009": "iPhone XR", "35306310": "iPhone XS",
-                "35655709": "iPhone XS Max", "35293211": "iPhone 11",
-                "35308611": "iPhone 11 Pro", "35306211": "iPhone 11 Pro Max",
-                "35304711": "iPhone SE (2020)",
-                "35183812": "iPhone 12", "35189712": "iPhone 12 Pro",
-                "35294512": "iPhone 12 Pro Max", "35301812": "iPhone 12 Mini",
-                "35027521": "iPhone 13", "35467439": "iPhone 13 Pro",
-                "35345789": "iPhone 13 Pro Max",
-                "35058765": "iPhone 14", "35060449": "iPhone 14 Pro",
-                "35061699": "iPhone 14 Pro Max"
-            };
+    if (!imei || imei.length < 8) return "Unknown (Check IMEI)";
+    
+    var tac = imei.substring(0, 8);
+    
+    // Lista AMPLIADA de TACs (Type Allocation Code) comunes de iPhone
+    var tacDb = {
+        // --- iPhone 6 / 6 Plus / SE (1ra Gen) ---
+        "35201107": "iPhone 6",
+        "35201207": "iPhone 6 Plus",
+        "35925006": "iPhone 6s",
+        "35325807": "iPhone 6s", // Ya en lista
+        "35728509": "iPhone 6s", // Ya en lista
+        "35325907": "iPhone 6s Plus",
+        "35728609": "iPhone 6s Plus",
+        "35661109": "iPhone SE (1ra Gen)",
 
-            // Búsqueda exacta
-            if (tacDb[tac]) return tacDb[tac];
+        // --- iPhone 7 / 8 / X ---
+        "35914907": "iPhone 7", // Ya en lista
+        "35538308": "iPhone 7",
+        "35540308": "iPhone 7 Plus", // Ya en lista
+        "35674008": "iPhone 8", // Ya en lista
+        "35298809": "iPhone 8 Plus", // Ya en lista
+        "35673408": "iPhone X", // Ya en lista
+        "35487909": "iPhone X", // Ya en lista
+        
+        // --- iPhone XR / XS / 11 Series / SE (2020) ---
+        "35740009": "iPhone XR", // Ya en lista
+        "35306310": "iPhone XS", // Ya en lista
+        "35655709": "iPhone XS Max", // Ya en lista
+        "35293211": "iPhone 11", // Ya en lista
+        "35308611": "iPhone 11 Pro", // Ya en lista
+        "35306211": "iPhone 11 Pro Max", // Ya en lista
+        "35304711": "iPhone SE (2020)", // Ya en lista
+        
+        // --- iPhone 12 Series ---
+        "35183812": "iPhone 12", // Ya en lista
+        "35442512": "iPhone 12",
+        "35282212": "iPhone 12",
+        "35189712": "iPhone 12 Pro", // Ya en lista
+        "35451712": "iPhone 12 Pro",
+        "35294512": "iPhone 12 Pro Max", // Ya en lista
+        "35451812": "iPhone 12 Pro Max",
+        "35301812": "iPhone 12 Mini", // Ya en lista
+        "35282412": "iPhone 12 Mini",
+        
+        // --- iPhone 13 Series ---
+        "35027521": "iPhone 13", // Ya en lista
+        "35467339": "iPhone 13",
+        "35654314": "iPhone 13",
+        "35027621": "iPhone 13 Mini",
+        "35289114": "iPhone 13 Mini",
+        "35467439": "iPhone 13 Pro", // Ya en lista
+        "35791221": "iPhone 13 Pro",
+        "35654214": "iPhone 13 Pro",
+        "35345789": "iPhone 13 Pro Max", // Ya en lista
+        "35289014": "iPhone 13 Pro Max",
+        
+        // --- iPhone 14 Series ---
+        "35058765": "iPhone 14", // Ya en lista
+        "35443914": "iPhone 14",
+        "35898022": "iPhone 14",
+        "35058865": "iPhone 14 Plus",
+        "35252914": "iPhone 14 Plus",
+        "35898122": "iPhone 14 Plus",
+        "35060449": "iPhone 14 Pro", // Ya en lista
+        "35252814": "iPhone 14 Pro",
+        "35898222": "iPhone 14 Pro",
+        "35061699": "iPhone 14 Pro Max", // Ya en lista
+        "35898322": "iPhone 14 Pro Max",
+        "35134435": "iPhone 14 Pro Max",
 
-            // Si no encuentra exacto, intenta lógica aproximada (menos precisa)
-            if (tac.startsWith("35")) return "Apple Device (Generic)";
-            
-            return "Unknown / Not in Local DB";
-        }
+        // --- iPhone 15 Series / SE (2022) ---
+        "35860017": "iPhone SE (2022)", 
+        "35860117": "iPhone SE (2022)",
+        "35798999": "iPhone 15",
+        "35606615": "iPhone 15",
+        "35400015": "iPhone 15",
+        "35798899": "iPhone 15 Plus",
+        "35400115": "iPhone 15 Plus",
+        "35799099": "iPhone 15 Pro",
+        "35400215": "iPhone 15 Pro",
+        "35799199": "iPhone 15 Pro Max",
+        "35400315": "iPhone 15 Pro Max",
+    };
+
+    // Búsqueda exacta
+    if (tacDb[tac]) return tacDb[tac];
+
+    // Si no encuentra exacto, intenta lógica aproximada (menos precisa)
+    // El prefijo '35' es común y casi universal para dispositivos Apple GSM/LTE.
+    if (tac.startsWith("35")) return "Apple Device (Generic)";
+    
+    return "Unknown / Not in Local DB";
+}
+
 
         function openWebsite() {
             var imei = document.getElementById("imei").value.trim();
